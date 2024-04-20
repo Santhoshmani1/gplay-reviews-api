@@ -10,6 +10,47 @@ app.use(cors({ origin: "*" }));
 app.use(helmet());
 
 
+// GET suggest
+// Returns an array of 5 suggested search terms based on the search term provided
+app.get("/suggest", (req, res) => {
+  gplay
+    .suggest({
+      term: req.query.term,
+    })
+    .then((response) => {
+      res.status(200).send(response);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
+
+// GET search
+// Returns an array of top 10 apps based on the search term provided
+app.get("/search", (req, res) => {
+  gplay
+    .search({
+      term: req.query.term,
+      num: 10,
+    })
+    .then((response) => {
+      const similarApps = response.map((app) => {
+        return {
+          title: app.title,
+          icon: app.icon,
+          appId: app.appId,
+          rating: app.scoreText,
+        };
+      });
+      res.status(200).send(similarApps);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
+
+
+
 app.listen(process.env.PORT || 3000, () => {
   console.log("Google play store API is running on port 3000");
 });
