@@ -49,6 +49,37 @@ app.get("/search", (req, res) => {
     });
 });
 
+// GET app
+// Returns the app details based on the appId provided
+app.get("/app", (req, res) => {
+  const appId = req.query.appId;
+  gplay
+    .app({ appId })
+    .then((response) => {
+      res.status(200).send(response);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
+
+// GET reviews
+// Returns an array of top 100 most helpful reviews based on the appId provided
+app.get("/reviews", (req, res) => {
+  const appId = req.query.appId;
+  gplay
+    .reviews({
+      appId,
+      sort: gplay.sort.HELPFULNESS,
+      num: 100,
+    })
+    .then((response) => {
+      res.status(200).send(response);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
 
 
 app.listen(process.env.PORT || 3000, () => {
