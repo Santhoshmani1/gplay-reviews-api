@@ -9,6 +9,10 @@ app.use(express.json());
 app.use(cors({ origin: "*" }));
 app.use(helmet());
 
+app.get("/", (req, res) => {
+  res.status(200).send("Welcome to Google Play Store API");
+});
+
 // Supported endpoints :  GET suggest, search, app, reviews, permissions, and similar
 
 // GET suggest
