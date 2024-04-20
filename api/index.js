@@ -9,6 +9,7 @@ app.use(express.json());
 app.use(cors({ origin: "*" }));
 app.use(helmet());
 
+// Supported endpoints :  GET suggest, search, app, reviews, permissions, and similar
 
 // GET suggest
 // Returns an array of 5 suggested search terms based on the search term provided
@@ -81,6 +82,46 @@ app.get("/reviews", (req, res) => {
     });
 });
 
+// GET permissions
+// Returns an array of permissions based on the appId provided
+app.get("/permissions", (req, res) => {
+  const appId = req.query.appId;
+  gplay
+    .permissions({
+      appId,
+    })
+    .then((response) => {
+      res.status(200).send(response);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
+
+// GET similar
+// Returns an array of similar apps based on the appId provided
+app.get("/similar", (req, res) => {
+  const appId = req.query.appId;
+  gplay
+    .similar({
+      appId,
+    })
+    .then((response) => {
+      const similarApps = response.map((app) => {
+        return {
+          title: app.title,
+          icon: app.icon,
+          appId: app.appId,
+          rating: app.scoreText,
+        };
+      });
+
+      res.status(200).send(similarApps.slice(0, 10));
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
 
 app.listen(process.env.PORT || 3000, () => {
   console.log("Google play store API is running on port 3000");
