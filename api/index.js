@@ -127,6 +127,20 @@ app.get("/similar", (req, res) => {
     });
 });
 
+// GET developer 
+// Returns apps by specific developer based on the devId.
+app.get("/developer", (req, res) => {
+  const devId = req.query.devId;
+  gplay
+    .developer({ devId })
+    .then((response) => {
+      res.status(200).send(response);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
+
 app.listen(process.env.PORT || 3000, () => {
   console.log("Google play store API is running on port 3000");
 });
